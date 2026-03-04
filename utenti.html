@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Utenti - ehyHost</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .table-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--gray-50);
+      min-width: 200px;
+    }
+    .table-search input {
+      border: none;
+      background: none;
+      outline: none;
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--text);
+      width: 100%;
+    }
+    .table-search input::placeholder {
+      color: var(--text-tertiary);
+    }
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 768px) {
+      .table-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .table-search {
+        min-width: unset;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <a href="dashboard.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">eH</div>
+      <div class="sidebar-logo-text">ehy<span>Host</span></div>
+    </a>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Menu</div>
+      <a href="dashboard.html" class="sidebar-link"><span class="icon">&#x1F4CA;</span> Dashboard</a>
+      <a href="appartamenti.html" class="sidebar-link"><span class="icon">&#x1F3E0;</span> Appartamenti</a>
+      <a href="utenti.html" class="sidebar-link active"><span class="icon">&#x1F465;</span> Utenti</a>
+      <a href="clienti.html" class="sidebar-link"><span class="icon">&#x1F3E2;</span> Clienti</a>
+      <a href="soggiorni.html" class="sidebar-link"><span class="icon">&#x1F4C5;</span> Soggiorni</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Sistema</div>
+      <a href="#" class="sidebar-link"><span class="icon">&#x1F514;</span> Notifiche</a>
+      <a href="#" class="sidebar-link"><span class="icon">&#x2699;&#xFE0F;</span> Impostazioni</a>
+    </div>
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar">MZ</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Milo Zoppini</div>
+        <div class="sidebar-user-role">Tecnico</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Main wrapper -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" onclick="toggleSidebar()">&#x2630;</button>
+        <nav class="topbar-breadcrumb">
+          <a href="dashboard.html">Dashboard</a>
+          <span>/</span>
+          <span class="current">Utenti</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-search">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="7" cy="7" r="5"/>
+            <line x1="11" y1="11" x2="15" y2="15"/>
+          </svg>
+          <input type="text" placeholder="Cerca...">
+        </div>
+        <button class="topbar-icon-btn">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notif-dot"></span>
+        </button>
+        <div class="topbar-icon-btn" style="font-weight:700;font-size:13px;color:var(--primary);background:var(--primary-50);border-color:var(--primary-50);">MZ</div>
+      </div>
+    </header>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1>Gestione Utenti</h1>
+        <p>Gestisci tutti gli utenti della piattaforma</p>
+      </div>
+      <div class="page-header-actions">
+        <button class="btn btn-primary">&#x2795; Nuovo Utente</button>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon blue">&#x1F465;</div>
+          <div class="stat-card-label">Totale Utenti</div>
+        </div>
+        <div class="stat-card-value">1,284</div>
+        <div class="stat-card-trend up">+12.5% &#x2191;</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon green">&#x2705;</div>
+          <div class="stat-card-label">Attivi</div>
+        </div>
+        <div class="stat-card-value">1,156</div>
+        <div class="stat-card-trend up">+8.1% &#x2191;</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon orange">&#x26A0;&#xFE0F;</div>
+          <div class="stat-card-label">Sospesi</div>
+        </div>
+        <div class="stat-card-value">98</div>
+        <div class="stat-card-trend down">+3.2% &#x2191;</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon red">&#x1F195;</div>
+          <div class="stat-card-label">Nuovi (mese)</div>
+        </div>
+        <div class="stat-card-value">47</div>
+        <div class="stat-card-trend up">+15.3% &#x2191;</div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+      <!-- Table Header -->
+      <div class="table-header">
+        <div class="table-header-left">
+          <h3>Lista Utenti</h3>
+          <span class="table-count">1,284</span>
+        </div>
+      </div>
+
+      <!-- Toolbar: Filters + Search -->
+      <div class="table-toolbar">
+        <div class="table-filters">
+          <button class="table-filter active">Tutti</button>
+          <button class="table-filter">Tecnici</button>
+          <button class="table-filter">Host</button>
+          <button class="table-filter">Cleaner</button>
+          <button class="table-filter">Guest</button>
+        </div>
+        <div class="table-search">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="6.5" cy="6.5" r="4.5"/>
+            <line x1="10" y1="10" x2="14" y2="14"/>
+          </svg>
+          <input type="text" placeholder="Cerca utente...">
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Utente</th>
+              <th>Ruolo</th>
+              <th>Appartamenti</th>
+              <th>Ultimo Accesso</th>
+              <th>Stato</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 1. Marco Rossi -->
+            <tr>
+              <td>
+                <div class="table-user">
+                  <div class="table-avatar" style="background:var(--blue-light);color:var(--blue);">MR</div>
+                  <div>
+                    <div class="table-user-name">Marco Rossi</div>
+                    <div class="table-user-email">marco@ehyhost.com</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-info">Tecnico</span></td>
+              <td>8</td>
+              <td style="color:var(--text-secondary);">2 min fa</td>
+              <td><span class="badge badge-success"><span class="badge-dot"></span> Attivo</span></td>
+              <td>
+                <div class="table-actions">
+                  <button class="table-action-btn">&#x270F;&#xFE0F;</button>
+                  <button class="table-action-btn">&#x1F5D1;&#xFE0F;</button>
+                </div>
+              </td>
+            </tr>
+            <!-- 2. Giulia Bianchi -->
+            <tr>
+              <td>
+                <div class="table-user">
+                  <div class="table-avatar" style="background:var(--success-light);color:var(--success);">GB</div>
+                  <div>
+                    <div class="table-user-name">Giulia Bianchi</div>
+                    <div class="table-user-email">giulia@ehyhost.com</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-success">Host</span></td>
+              <td>12</td>
+              <td style="color:var(--text-secondary);">15 min fa</td>
+              <td><span class="badge badge-success"><span class="badge-dot"></span> Attivo</span></td>
+              <td>
+                <div class="table-actions">
+                  <button class="table-action-btn">&#x270F;&#xFE0F;</button>
+                  <button class="table-action-btn">&#x1F5D1;&#xFE0F;</button>
+                </div>
+              </td>
+            </tr>
+            <!-- 3. Alessandro Verdi -->
+            <tr>
+              <td>
+                <div class="table-user">
+                  <div class="table-avatar" style="background:var(--warning-light);color:var(--warning);">AV</div>
+                  <div>
+                    <div class="table-user-name">Alessandro Verdi</div>
+                    <div class="table-user-email">alex@ehyhost.com</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-warning">Cleaner</span></td>
+              <td>5</td>
+              <td style="color:var(--text-secondary);">1 ora fa</td>
+              <td><span class="badge badge-success"><span class="badge-dot"></span> Attivo</span></td>
+              <td>
+                <div class="table-actions">
+                  <button class="table-action-btn">&#x270F;&#xFE0F;</button>
+                  <button class="table-action-btn">&#x1F5D1;&#xFE0F;</button>
+                </div>
+              </td>
+            </tr>
+            <!-- 4. Francesca Romano -->
+            <tr>
+              <td>
+                <div class="table-user">
+                  <div class="table-avatar" style="background:var(--success-light);color:var(--success);">FR</div>
+                  <div>
+                    <div class="table-user-name">Francesca Romano</div>
+                    <div class="table-user-email">francesca@ehyhost.com</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-success">Host</span></td>
+              <td>3</td>
+              <td style="color:var(--text-secondary);">3 ore fa</td>
+              <td><span class="badge badge-success"><span class="badge-dot"></span> Attivo</span></td>
+              <td>
+                <div class="table-actions">
+                  <button class="table-action-btn">&#x270F;&#xFE0F;</button>
+                  <button class="table-action-btn">&#x1F5D1;&#xFE0F;</button>
+                </div>
+              </td>
+            </tr>
+            <!-- 5. Luca Esposito -->
+            <tr>
+              <td>
+                <div class="table-user">
+                  <div class="table-avatar" style="background:var(--blue-light);color:var(--blue);">LE</div>
+                  <div>
+                    <div class="table-user-name">Luca Esposito</div>
+                    <div class="table-user-email">luca@ehyhost.com</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-info">Tecnico</span></td>
+              <td>15</td>
+              <td style="color:var(--text-secondary);">5 min fa</td>
+              <td><span class="badge badge-success"><span class="badge-dot"></span> Attivo</span></td>
+              <td>
+                <div class="table-actions">
+                  <button class="table-action-btn">&#x270F;&#xFE0F;</button>
+                  <button class="table-action-btn">&#x1F5D1;&#xFE0F;</button>
+                </div>
+              </td>
+            </tr>
+            <!-- 6. Sofia Colombo -->
+            <tr>
+              <td>
+                <div class="table-user">
+                  <div class="table-avatar" style="background:var(--gray-100);color:var(--text-secondary);">SC</div>
+                  <div>
+                    <div class="table-user-name">Sofia Colombo</div>
+                    <div class="table-user-email">sofia@ehyhost.com</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-neutral">Guest</span></td>
+              <td>1</td>
+              <td style="color:var(--text-secondary);">1 giorno fa</td>
+              <td><span class="badge badge-warning"><span class="badge-dot"></span> Sospeso</span></td>
+              <td>
+                <div class="table-actions">
+                  <button class="table-action-btn">&#x270F;&#xFE0F;</button>
+                  <button class="table-action-btn">&#x1F5D1;&#xFE0F;</button>
+                </div>
+              </td>
+            </tr>
+            <!-- 7. Andrea Ferrari -->
+            <tr>
+              <td>
+                <div class="table-user">
+                  <div class="table-avatar" style="background:var(--success-light);color:var(--success);">AF</div>
+                  <div>
+                    <div class="table-user-name">Andrea Ferrari</div>
+                    <div class="table-user-email">andrea@ehyhost.com</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-success">Host</span></td>
+              <td>7</td>
+              <td style="color:var(--text-secondary);">30 min fa</td>
+              <td><span class="badge badge-success"><span class="badge-dot"></span> Attivo</span></td>
+              <td>
+                <div class="table-actions">
+                  <button class="table-action-btn">&#x270F;&#xFE0F;</button>
+                  <button class="table-action-btn">&#x1F5D1;&#xFE0F;</button>
+                </div>
+              </td>
+            </tr>
+            <!-- 8. Elena Russo -->
+            <tr>
+              <td>
+                <div class="table-user">
+                  <div class="table-avatar" style="background:var(--warning-light);color:var(--warning);">ER</div>
+                  <div>
+                    <div class="table-user-name">Elena Russo</div>
+                    <div class="table-user-email">elena@ehyhost.com</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-warning">Cleaner</span></td>
+              <td>4</td>
+              <td style="color:var(--text-secondary);">2 ore fa</td>
+              <td><span class="badge badge-success"><span class="badge-dot"></span> Attivo</span></td>
+              <td>
+                <div class="table-actions">
+                  <button class="table-action-btn">&#x270F;&#xFE0F;</button>
+                  <button class="table-action-btn">&#x1F5D1;&#xFE0F;</button>
+                </div>
+              </td>
+            </tr>
+            <!-- 9. Matteo Conti -->
+            <tr>
+              <td>
+                <div class="table-user">
+                  <div class="table-avatar" style="background:var(--blue-light);color:var(--blue);">MC</div>
+                  <div>
+                    <div class="table-user-name">Matteo Conti</div>
+                    <div class="table-user-email">matteo@ehyhost.com</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-info">Tecnico</span></td>
+              <td>10</td>
+              <td style="color:var(--text-secondary);">10 min fa</td>
+              <td><span class="badge badge-success"><span class="badge-dot"></span> Attivo</span></td>
+              <td>
+                <div class="table-actions">
+                  <button class="table-action-btn">&#x270F;&#xFE0F;</button>
+                  <button class="table-action-btn">&#x1F5D1;&#xFE0F;</button>
+                </div>
+              </td>
+            </tr>
+            <!-- 10. Chiara Moretti -->
+            <tr>
+              <td>
+                <div class="table-user">
+                  <div class="table-avatar" style="background:var(--gray-100);color:var(--text-secondary);">CM</div>
+                  <div>
+                    <div class="table-user-name">Chiara Moretti</div>
+                    <div class="table-user-email">chiara@ehyhost.com</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-neutral">Guest</span></td>
+              <td>2</td>
+              <td style="color:var(--text-secondary);">5 ore fa</td>
+              <td><span class="badge badge-success"><span class="badge-dot"></span> Attivo</span></td>
+              <td>
+                <div class="table-actions">
+                  <button class="table-action-btn">&#x270F;&#xFE0F;</button>
+                  <button class="table-action-btn">&#x1F5D1;&#xFE0F;</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="table-pagination">
+        <div class="table-pagination-info">Mostrando 1-10 di 1,284 utenti</div>
+        <div class="table-pagination-btns">
+          <button class="pagination-btn active">1</button>
+          <button class="pagination-btn">2</button>
+          <button class="pagination-btn">3</button>
+          <button class="pagination-btn">&#x203A;</button>
+          <button class="pagination-btn">&#x00BB;</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('show');
+    }
+  </script>
+
+</body>
+</html>

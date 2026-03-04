@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appartamenti - ehyHost</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ========== FILTERS BAR ========== */
+    .filters-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px 24px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .filters-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .view-toggle {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .view-toggle-btn {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--white);
+      border: none;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      transition: all 0.15s;
+    }
+
+    .view-toggle-btn:first-child {
+      border-right: 1px solid var(--border);
+    }
+
+    .view-toggle-btn.active {
+      background: var(--text);
+      color: var(--white);
+    }
+
+    .view-toggle-btn:hover:not(.active) {
+      background: var(--gray-50);
+      color: var(--text-secondary);
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 6px;
+    }
+
+    .filter-pill {
+      padding: 7px 16px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      background: var(--white);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-family: var(--font);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-pill:hover {
+      background: var(--gray-50);
+      color: var(--text);
+    }
+
+    .filter-pill.active {
+      background: var(--text);
+      color: var(--white);
+      border-color: var(--text);
+    }
+
+    .sort-dropdown {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--white);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-family: var(--font);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2394A3B8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+    }
+
+    /* ========== APARTMENT CARDS GRID ========== */
+    .apt-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding: 0 32px 32px;
+    }
+
+    .apt-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-xs);
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .apt-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .apt-card-img-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .apt-card-img-wrapper img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .apt-card:hover .apt-card-img-wrapper img {
+      transform: scale(1.05);
+    }
+
+    .apt-card-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 600;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .apt-card-badge.online {
+      background: rgba(236, 253, 243, 0.9);
+      color: var(--success-dark);
+    }
+
+    .apt-card-badge.manutenzione {
+      background: rgba(255, 250, 235, 0.9);
+      color: var(--warning-dark);
+    }
+
+    .apt-card-badge.offline {
+      background: rgba(254, 243, 242, 0.9);
+      color: var(--error);
+    }
+
+    .apt-card-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .apt-card-badge.online .apt-card-badge-dot { background: var(--success); }
+    .apt-card-badge.manutenzione .apt-card-badge-dot { background: var(--warning); }
+    .apt-card-badge.offline .apt-card-badge-dot { background: var(--error); }
+
+    .apt-card-body {
+      padding: 18px 20px;
+    }
+
+    .apt-card-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .apt-card-address {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .apt-card-client {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .apt-card-client-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .apt-card-stats {
+      display: flex;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .apt-card-stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .apt-card-stat-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--gray-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    /* ========== LOAD MORE ========== */
+    .load-more-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 32px 40px;
+    }
+
+    .load-more-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 32px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-family: var(--font);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .load-more-btn:hover {
+      background: var(--gray-50);
+      color: var(--text);
+      border-color: var(--text-tertiary);
+    }
+
+    .load-more-info {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 1200px) {
+      .apt-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .apt-grid {
+        grid-template-columns: 1fr;
+        padding: 0 16px 16px;
+      }
+
+      .filters-bar {
+        padding: 0 16px 16px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .filters-bar-left {
+        flex-wrap: wrap;
+      }
+
+      .filter-pills {
+        flex-wrap: wrap;
+      }
+
+      .load-more-wrapper {
+        padding: 8px 16px 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .apt-card-stats {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <a href="dashboard.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">eH</div>
+      <div class="sidebar-logo-text">ehy<span>Host</span></div>
+    </a>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Menu</div>
+      <a href="dashboard.html" class="sidebar-link"><span class="icon">&#x1F4CA;</span> Dashboard</a>
+      <a href="appartamenti.html" class="sidebar-link active"><span class="icon">&#x1F3E0;</span> Appartamenti</a>
+      <a href="utenti.html" class="sidebar-link"><span class="icon">&#x1F465;</span> Utenti</a>
+      <a href="clienti.html" class="sidebar-link"><span class="icon">&#x1F3E2;</span> Clienti</a>
+      <a href="soggiorni.html" class="sidebar-link"><span class="icon">&#x1F4C5;</span> Soggiorni</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Sistema</div>
+      <a href="#" class="sidebar-link"><span class="icon">&#x1F514;</span> Notifiche</a>
+      <a href="#" class="sidebar-link"><span class="icon">&#x2699;&#xFE0F;</span> Impostazioni</a>
+    </div>
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar">MZ</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Milo Zoppini</div>
+        <div class="sidebar-user-role">Tecnico</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Main wrapper -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" onclick="toggleSidebar()">&#x2630;</button>
+        <nav class="topbar-breadcrumb">
+          <a href="dashboard.html">Dashboard</a>
+          <span>/</span>
+          <span class="current">Appartamenti</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-search">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="7" cy="7" r="5"/>
+            <line x1="11" y1="11" x2="15" y2="15"/>
+          </svg>
+          <input type="text" placeholder="Cerca...">
+        </div>
+        <button class="topbar-icon-btn">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notif-dot"></span>
+        </button>
+        <div class="topbar-icon-btn" style="font-weight:700;font-size:13px;color:var(--primary);background:var(--primary-50);border-color:var(--primary-50);">MZ</div>
+      </div>
+    </header>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1>Gestione Appartamenti</h1>
+        <p>Monitora e gestisci tutti gli appartamenti</p>
+      </div>
+      <div class="page-header-actions">
+        <button class="btn btn-secondary">&#x1F4CA; Esporta</button>
+        <button class="btn btn-primary">&#x2795; Nuovo Appartamento</button>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon blue">&#x1F3E0;</div>
+          <div class="stat-card-label">Totale Appartamenti</div>
+        </div>
+        <div class="stat-card-value">147</div>
+        <div class="stat-card-trend up">+8.2% &#x2191;</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon green">&#x2705;</div>
+          <div class="stat-card-label">Online</div>
+        </div>
+        <div class="stat-card-value">128</div>
+        <div class="stat-card-trend up">+5.1% &#x2191;</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon orange">&#x1F527;</div>
+          <div class="stat-card-label">Manutenzione</div>
+        </div>
+        <div class="stat-card-value">12</div>
+        <div class="stat-card-trend down">+3 &#x2191;</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon red">&#x26D4;</div>
+          <div class="stat-card-label">Offline</div>
+        </div>
+        <div class="stat-card-value">7</div>
+        <div class="stat-card-trend down">-2 &#x2193;</div>
+      </div>
+    </div>
+
+    <!-- Filters Bar -->
+    <div class="filters-bar">
+      <div class="filters-bar-left">
+        <div class="view-toggle">
+          <button class="view-toggle-btn active" title="Vista griglia">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="1" width="6" height="6" rx="1"/>
+              <rect x="9" y="1" width="6" height="6" rx="1"/>
+              <rect x="1" y="9" width="6" height="6" rx="1"/>
+              <rect x="9" y="9" width="6" height="6" rx="1"/>
+            </svg>
+          </button>
+          <button class="view-toggle-btn" title="Vista lista">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="1" y1="3" x2="15" y2="3"/>
+              <line x1="1" y1="8" x2="15" y2="8"/>
+              <line x1="1" y1="13" x2="15" y2="13"/>
+            </svg>
+          </button>
+        </div>
+        <div class="filter-pills">
+          <button class="filter-pill active">Tutti</button>
+          <button class="filter-pill">Online</button>
+          <button class="filter-pill">Manutenzione</button>
+          <button class="filter-pill">Offline</button>
+        </div>
+      </div>
+      <select class="sort-dropdown">
+        <option>Ordina per: Nome</option>
+        <option>Ordina per: Stato</option>
+        <option>Ordina per: Dispositivi</option>
+        <option>Ordina per: Ospiti</option>
+      </select>
+    </div>
+
+    <!-- Apartment Cards Grid -->
+    <div class="apt-grid">
+
+      <!-- Card 1: Loft Isola Milano -->
+      <div class="apt-card">
+        <div class="apt-card-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500&h=300&fit=crop" alt="Loft Isola Milano" loading="lazy">
+          <span class="apt-card-badge online">
+            <span class="apt-card-badge-dot"></span>
+            Online
+          </span>
+        </div>
+        <div class="apt-card-body">
+          <div class="apt-card-name">Loft Isola Milano</div>
+          <div class="apt-card-address">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10.5c0 2.5-5 4-5 4s-5-1.5-5-4a5 5 0 1 1 10 0z"/><circle cx="7" cy="7" r="1.5"/></svg>
+            Via Thaon di Revel 12
+          </div>
+          <div class="apt-card-client">
+            <span class="apt-card-client-dot"></span>
+            Milano Property SRL
+          </div>
+          <div class="apt-card-stats">
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F4F1;</div>
+              <span>4 dispositivi</span>
+            </div>
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F464;</div>
+              <span>2 ospiti</span>
+            </div>
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F4E1;</div>
+              <span>12 sensori</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Navigli Minimal -->
+      <div class="apt-card">
+        <div class="apt-card-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&h=300&fit=crop" alt="Navigli Minimal" loading="lazy">
+          <span class="apt-card-badge online">
+            <span class="apt-card-badge-dot"></span>
+            Online
+          </span>
+        </div>
+        <div class="apt-card-body">
+          <div class="apt-card-name">Navigli Minimal</div>
+          <div class="apt-card-address">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10.5c0 2.5-5 4-5 4s-5-1.5-5-4a5 5 0 1 1 10 0z"/><circle cx="7" cy="7" r="1.5"/></svg>
+            Ripa di Porta Ticinese 55
+          </div>
+          <div class="apt-card-client">
+            <span class="apt-card-client-dot"></span>
+            Casa Bella Group
+          </div>
+          <div class="apt-card-stats">
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F4F1;</div>
+              <span>6 dispositivi</span>
+            </div>
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F464;</div>
+              <span>3 ospiti</span>
+            </div>
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F4E1;</div>
+              <span>18 sensori</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Brera Design Apt -->
+      <div class="apt-card">
+        <div class="apt-card-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=300&fit=crop" alt="Brera Design Apt" loading="lazy">
+          <span class="apt-card-badge manutenzione">
+            <span class="apt-card-badge-dot"></span>
+            Manutenzione
+          </span>
+        </div>
+        <div class="apt-card-body">
+          <div class="apt-card-name">Brera Design Apt</div>
+          <div class="apt-card-address">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10.5c0 2.5-5 4-5 4s-5-1.5-5-4a5 5 0 1 1 10 0z"/><circle cx="7" cy="7" r="1.5"/></svg>
+            Via Fiori Chiari 8
+          </div>
+          <div class="apt-card-client">
+            <span class="apt-card-client-dot"></span>
+            Milano Property SRL
+          </div>
+          <div class="apt-card-stats">
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F4F1;</div>
+              <span>5 dispositivi</span>
+            </div>
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F464;</div>
+              <span>0 ospiti</span>
+            </div>
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F4E1;</div>
+              <span>15 sensori</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Skyline Suite -->
+      <div class="apt-card">
+        <div class="apt-card-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=500&h=300&fit=crop" alt="Skyline Suite" loading="lazy">
+          <span class="apt-card-badge online">
+            <span class="apt-card-badge-dot"></span>
+            Online
+          </span>
+        </div>
+        <div class="apt-card-body">
+          <div class="apt-card-name">Skyline Suite</div>
+          <div class="apt-card-address">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10.5c0 2.5-5 4-5 4s-5-1.5-5-4a5 5 0 1 1 10 0z"/><circle cx="7" cy="7" r="1.5"/></svg>
+            Viale Lombardia 32
+          </div>
+          <div class="apt-card-client">
+            <span class="apt-card-client-dot"></span>
+            Luxury Stays Milano
+          </div>
+          <div class="apt-card-stats">
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F4F1;</div>
+              <span>8 dispositivi</span>
+            </div>
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F464;</div>
+              <span>4 ospiti</span>
+            </div>
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F4E1;</div>
+              <span>24 sensori</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5: Porta Nuova Loft -->
+      <div class="apt-card">
+        <div class="apt-card-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=500&h=300&fit=crop" alt="Porta Nuova Loft" loading="lazy">
+          <span class="apt-card-badge online">
+            <span class="apt-card-badge-dot"></span>
+            Online
+          </span>
+        </div>
+        <div class="apt-card-body">
+          <div class="apt-card-name">Porta Nuova Loft</div>
+          <div class="apt-card-address">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10.5c0 2.5-5 4-5 4s-5-1.5-5-4a5 5 0 1 1 10 0z"/><circle cx="7" cy="7" r="1.5"/></svg>
+            Via Melchiorre Gioia 14
+          </div>
+          <div class="apt-card-client">
+            <span class="apt-card-client-dot"></span>
+            Domus Italia
+          </div>
+          <div class="apt-card-stats">
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F4F1;</div>
+              <span>3 dispositivi</span>
+            </div>
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F464;</div>
+              <span>1 ospite</span>
+            </div>
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F4E1;</div>
+              <span>9 sensori</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6: Duomo View Studio -->
+      <div class="apt-card">
+        <div class="apt-card-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=500&h=300&fit=crop" alt="Duomo View Studio" loading="lazy">
+          <span class="apt-card-badge offline">
+            <span class="apt-card-badge-dot"></span>
+            Offline
+          </span>
+        </div>
+        <div class="apt-card-body">
+          <div class="apt-card-name">Duomo View Studio</div>
+          <div class="apt-card-address">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10.5c0 2.5-5 4-5 4s-5-1.5-5-4a5 5 0 1 1 10 0z"/><circle cx="7" cy="7" r="1.5"/></svg>
+            Via Torino 21
+          </div>
+          <div class="apt-card-client">
+            <span class="apt-card-client-dot"></span>
+            Urban Living SRL
+          </div>
+          <div class="apt-card-stats">
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F4F1;</div>
+              <span>7 dispositivi</span>
+            </div>
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F464;</div>
+              <span>0 ospiti</span>
+            </div>
+            <div class="apt-card-stat">
+              <div class="apt-card-stat-icon">&#x1F4E1;</div>
+              <span>21 sensori</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Load More -->
+    <div class="load-more-wrapper">
+      <div style="text-align:center;">
+        <button class="load-more-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 8a7 7 0 0 1 13.6-2.3"/>
+            <path d="M15 8a7 7 0 0 1-13.6 2.3"/>
+            <polyline points="14 1 14 5 10 5"/>
+            <polyline points="2 15 2 11 6 11"/>
+          </svg>
+          Carica altri
+        </button>
+        <div class="load-more-info">Visualizzati 6 di 147 appartamenti</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('show');
+    }
+
+    // View toggle interaction
+    document.querySelectorAll('.view-toggle-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.view-toggle-btn').forEach(function(b) { b.classList.remove('active'); });
+        this.classList.add('active');
+      });
+    });
+
+    // Filter pills interaction
+    document.querySelectorAll('.filter-pill').forEach(function(pill) {
+      pill.addEventListener('click', function() {
+        document.querySelectorAll('.filter-pill').forEach(function(p) { p.classList.remove('active'); });
+        this.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

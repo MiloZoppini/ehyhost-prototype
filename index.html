@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ehyHost - Login</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ====== LOGIN PAGE STYLES ====== */
+    body {
+      background: var(--white);
+      overflow-x: hidden;
+    }
+
+    .login-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ---- LEFT PANEL (Form) ---- */
+    .login-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 48px 32px;
+      background: var(--white);
+      min-height: 100vh;
+    }
+
+    .login-form-container {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .login-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+
+    .login-logo-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--primary);
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: -0.5px;
+      box-shadow: 0 2px 10px rgba(243, 67, 59, 0.3);
+    }
+
+    .login-logo-text {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .login-logo-text span {
+      color: var(--primary);
+    }
+
+    .login-heading {
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 32px;
+    }
+
+    /* Role Tabs */
+    .role-tabs {
+      display: flex;
+      background: var(--gray-50);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 4px;
+      margin-bottom: 28px;
+      gap: 2px;
+    }
+
+    .role-tab {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 8px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      background: transparent;
+      font-family: var(--font);
+      white-space: nowrap;
+    }
+
+    .role-tab:hover {
+      color: var(--text);
+      background: var(--white);
+    }
+
+    .role-tab.active {
+      background: var(--white);
+      color: var(--text);
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .role-tab-icon {
+      font-size: 15px;
+    }
+
+    /* Input Groups */
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0 14px;
+      background: var(--white);
+      transition: all 0.2s ease;
+      height: 48px;
+    }
+
+    .input-wrapper:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(243, 67, 59, 0.1);
+    }
+
+    .input-icon {
+      color: var(--text-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .input-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .input-wrapper input {
+      flex: 1;
+      border: none;
+      background: none;
+      outline: none;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text);
+      height: 100%;
+    }
+
+    .input-wrapper input::placeholder {
+      color: var(--text-tertiary);
+    }
+
+    .input-toggle {
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      border-radius: 6px;
+      transition: color 0.15s;
+    }
+
+    .input-toggle:hover {
+      color: var(--text-secondary);
+    }
+
+    .input-toggle svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Remember + Forgot */
+    .login-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .remember-me input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1.5px solid var(--border);
+      appearance: none;
+      -webkit-appearance: none;
+      background: var(--white);
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+
+    .remember-me input[type="checkbox"]:checked {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .remember-me input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 5px;
+      width: 5px;
+      height: 9px;
+      border: 2px solid white;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+
+    .remember-me span {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .forgot-link {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .forgot-link:hover {
+      color: var(--primary-dark);
+    }
+
+    /* Accedi Button */
+    .btn-login {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px 24px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 700;
+      font-family: var(--font);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      box-shadow: 0 2px 12px rgba(243, 67, 59, 0.3);
+    }
+
+    .btn-login:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(243, 67, 59, 0.4);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    /* Divider */
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .login-divider::before,
+    .login-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .login-divider span {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+
+    /* Google Button */
+    .btn-google {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 13px 24px;
+      background: var(--white);
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: var(--font);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-google:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-200);
+    }
+
+    .btn-google svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    /* Footer */
+    .login-footer {
+      margin-top: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .login-footer-copy {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    .login-footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .login-footer-links a {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .login-footer-links a:hover {
+      color: var(--text-secondary);
+    }
+
+    /* ---- RIGHT PANEL (Visual) ---- */
+    .login-right {
+      flex: 1;
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 50%, #1a1a2e 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+    }
+
+    /* Ambient glow effects */
+    .login-right::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(243, 67, 59, 0.12) 0%, transparent 70%);
+      top: 10%;
+      right: -10%;
+      pointer-events: none;
+    }
+
+    .login-right::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+      bottom: 10%;
+      left: -5%;
+      pointer-events: none;
+    }
+
+    .right-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* Floating Cards */
+    .floating-cards {
+      position: relative;
+      height: 340px;
+      margin-bottom: 48px;
+    }
+
+    .float-card {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 20px;
+      color: white;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .float-card:hover {
+      transform: scale(1.02);
+    }
+
+    /* Card 1: Stats */
+    .float-card-stats {
+      top: 0;
+      left: 0;
+      width: 220px;
+      animation: floatUp 6s ease-in-out infinite;
+    }
+
+    .float-card-stats-label {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .float-card-stats-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .float-card-stats-value {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1;
+    }
+
+    .float-card-stats-trend {
+      font-size: 13px;
+      font-weight: 700;
+      color: #34D399;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .float-card-stats-bar {
+      display: flex;
+      gap: 3px;
+      margin-top: 14px;
+    }
+
+    .float-card-stats-bar-item {
+      height: 4px;
+      border-radius: 2px;
+      flex: 1;
+    }
+
+    /* Card 2: Apartment */
+    .float-card-apt {
+      top: 20px;
+      right: 0;
+      width: 230px;
+      padding: 0;
+      overflow: hidden;
+      animation: floatDown 7s ease-in-out infinite;
+    }
+
+    .float-card-apt img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .float-card-apt-body {
+      padding: 14px 16px;
+    }
+
+    .float-card-apt-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .float-card-apt-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      background: rgba(52, 211, 153, 0.15);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #34D399;
+    }
+
+    .float-card-apt-badge-dot {
+      width: 6px;
+      height: 6px;
+      background: #34D399;
+      border-radius: 50%;
+    }
+
+    /* Card 3: Activity */
+    .float-card-activity {
+      bottom: 0;
+      left: 30px;
+      right: 30px;
+      animation: floatUp 8s ease-in-out infinite;
+      animation-delay: 1s;
+    }
+
+    .float-card-activity-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+    }
+
+    .activity-item + .activity-item {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .activity-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .activity-icon.green {
+      background: rgba(52, 211, 153, 0.15);
+    }
+
+    .activity-icon.blue {
+      background: rgba(59, 130, 246, 0.15);
+    }
+
+    .activity-icon.orange {
+      background: rgba(247, 144, 9, 0.15);
+    }
+
+    .activity-text {
+      flex: 1;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.4;
+    }
+
+    .activity-text strong {
+      color: rgba(255, 255, 255, 0.95);
+      font-weight: 600;
+    }
+
+    .activity-time {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.35);
+      white-space: nowrap;
+    }
+
+    /* Right Panel Headline */
+    .right-headline {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .right-headline h2 {
+      font-size: 26px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -0.5px;
+      line-height: 1.3;
+    }
+
+    .right-headline .gradient-text {
+      background: linear-gradient(135deg, var(--primary) 0%, #FF6B6B 50%, #FF8E53 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .right-subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.5);
+      line-height: 1.6;
+      max-width: 380px;
+      margin: 0 auto 28px;
+    }
+
+    /* Dot Indicators */
+    .dot-indicators {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .dot-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: all 0.3s;
+    }
+
+    .dot-indicator.active {
+      width: 24px;
+      border-radius: 4px;
+      background: var(--primary);
+    }
+
+    /* ====== ANIMATIONS ====== */
+    @keyframes floatUp {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    @keyframes floatDown {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 1024px) {
+      .login-right {
+        display: none;
+      }
+
+      .login-left {
+        min-height: 100vh;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-left {
+        padding: 32px 20px;
+      }
+
+      .login-heading {
+        font-size: 26px;
+      }
+
+      .role-tabs {
+        flex-wrap: wrap;
+      }
+
+      .role-tab {
+        flex: 1 1 calc(50% - 2px);
+        font-size: 12px;
+        padding: 9px 6px;
+      }
+
+      .login-footer {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-wrapper">
+
+    <!-- ==================== LEFT PANEL ==================== -->
+    <div class="login-left">
+      <div class="login-form-container">
+
+        <!-- Logo -->
+        <div class="login-logo">
+          <div class="login-logo-icon">eH</div>
+          <div class="login-logo-text">ehy<span>Host</span></div>
+        </div>
+
+        <!-- Heading -->
+        <h1 class="login-heading">Bentornato &#x1F44B;</h1>
+        <p class="login-subtitle">Accedi al pannello di gestione dei tuoi appartamenti</p>
+
+        <!-- Role Tabs -->
+        <div class="role-tabs">
+          <button class="role-tab active">
+            <span class="role-tab-icon">&#x1F527;</span> Tech
+          </button>
+          <button class="role-tab">
+            <span class="role-tab-icon">&#x1F3E0;</span> Host
+          </button>
+          <button class="role-tab">
+            <span class="role-tab-icon">&#x1F9F9;</span> Cleaner
+          </button>
+          <button class="role-tab">
+            <span class="role-tab-icon">&#x1F464;</span> Guest
+          </button>
+        </div>
+
+        <!-- Email Input -->
+        <div class="input-group">
+          <label class="input-label">Email</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="M22 7l-10 6L2 7"/>
+              </svg>
+            </span>
+            <input type="email" value="milo@ehyhost.com" placeholder="nome@email.com">
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div class="input-group">
+          <label class="input-label">Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </span>
+            <input type="password" id="passwordInput" value="password123" placeholder="Inserisci password">
+            <button class="input-toggle" onclick="togglePassword()" type="button" aria-label="Mostra password">
+              <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg id="eyeOffIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Remember Me + Forgot -->
+        <div class="login-options">
+          <label class="remember-me">
+            <input type="checkbox" checked>
+            <span>Ricordami</span>
+          </label>
+          <a href="#" class="forgot-link">Password dimenticata?</a>
+        </div>
+
+        <!-- Accedi Button -->
+        <a href="dashboard.html" class="btn-login">
+          Accedi
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+
+        <!-- Divider -->
+        <div class="login-divider">
+          <span>oppure</span>
+        </div>
+
+        <!-- Google Button -->
+        <button class="btn-google" type="button">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          Continua con Google
+        </button>
+
+        <!-- Footer -->
+        <footer class="login-footer">
+          <span class="login-footer-copy">&copy; 2025 ehyHost</span>
+          <div class="login-footer-links">
+            <a href="#">Privacy</a>
+            <a href="#">Termini</a>
+            <a href="#">Supporto</a>
+          </div>
+        </footer>
+
+      </div>
+    </div>
+
+    <!-- ==================== RIGHT PANEL ==================== -->
+    <div class="login-right">
+      <div class="right-content">
+
+        <!-- Floating Cards -->
+        <div class="floating-cards">
+
+          <!-- Card 1: Stats -->
+          <div class="float-card float-card-stats">
+            <div class="float-card-stats-label">Appartamenti Attivi</div>
+            <div class="float-card-stats-row">
+              <span class="float-card-stats-value">147</span>
+              <span class="float-card-stats-trend">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                  <polyline points="17 6 23 6 23 12"/>
+                </svg>
+                +12.5%
+              </span>
+            </div>
+            <div class="float-card-stats-bar">
+              <div class="float-card-stats-bar-item" style="background: var(--primary); flex: 3;"></div>
+              <div class="float-card-stats-bar-item" style="background: #34D399; flex: 2;"></div>
+              <div class="float-card-stats-bar-item" style="background: #3B82F6; flex: 1.5;"></div>
+              <div class="float-card-stats-bar-item" style="background: rgba(255,255,255,0.15); flex: 1;"></div>
+            </div>
+          </div>
+
+          <!-- Card 2: Apartment -->
+          <div class="float-card float-card-apt">
+            <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=220&fit=crop" alt="Loft Isola Milano" loading="lazy">
+            <div class="float-card-apt-body">
+              <div class="float-card-apt-title">Loft Isola Milano</div>
+              <div class="float-card-apt-badge">
+                <span class="float-card-apt-badge-dot"></span>
+                Online
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Activity Feed -->
+          <div class="float-card float-card-activity">
+            <div class="float-card-activity-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+              Attivit&agrave; Recente
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon green">&#x2705;</div>
+              <div class="activity-text"><strong>Check-in</strong> completato - Via Roma 15</div>
+              <div class="activity-time">2 min fa</div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon blue">&#x1F321;&#xFE0F;</div>
+              <div class="activity-text"><strong>Sensore</strong> temperatura aggiornato</div>
+              <div class="activity-time">15 min fa</div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon orange">&#x1F527;</div>
+              <div class="activity-text"><strong>Manutenzione</strong> programmata confermata</div>
+              <div class="activity-time">1 ora fa</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Headline -->
+        <div class="right-headline">
+          <h2>Gestisci i tuoi appartamenti<br>con <span class="gradient-text">intelligenza</span></h2>
+        </div>
+        <p class="right-subtitle">Monitora accessi, sensori e manutenzioni da un unico pannello di controllo</p>
+
+        <!-- Dot Indicators -->
+        <div class="dot-indicators">
+          <div class="dot-indicator active"></div>
+          <div class="dot-indicator"></div>
+          <div class="dot-indicator"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Toggle password visibility
+    function togglePassword() {
+      const input = document.getElementById('passwordInput');
+      const eyeIcon = document.getElementById('eyeIcon');
+      const eyeOffIcon = document.getElementById('eyeOffIcon');
+
+      if (input.type === 'password') {
+        input.type = 'text';
+        eyeIcon.style.display = 'none';
+        eyeOffIcon.style.display = 'block';
+      } else {
+        input.type = 'password';
+        eyeIcon.style.display = 'block';
+        eyeOffIcon.style.display = 'none';
+      }
+    }
+
+    // Role tab switching
+    document.querySelectorAll('.role-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

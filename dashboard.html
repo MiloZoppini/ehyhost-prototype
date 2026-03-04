@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - ehyHost</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ========== HERO SECTION ========== */
+    .dashboard-hero {
+      background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dashboard-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .dashboard-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: 10%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .dashboard-hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .dashboard-hero h1 {
+      color: #FFFFFF;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+    }
+
+    .dashboard-hero p {
+      color: #94A3B8;
+      font-size: 15px;
+      margin: 0 0 28px 0;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stat-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px 24px;
+      min-width: 180px;
+      flex: 1;
+    }
+
+    .hero-stat-card .hero-stat-label {
+      color: #94A3B8;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .hero-stat-card .hero-stat-value {
+      color: #FFFFFF;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    /* ========== STATS GRID ========== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 20px;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .stat-card:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      transform: translateY(-2px);
+    }
+
+    .stat-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .stat-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .stat-card-icon.blue { background: #EEF2FF; }
+    .stat-card-icon.green { background: #ECFDF5; }
+    .stat-card-icon.purple { background: #F5F3FF; }
+    .stat-card-icon.orange { background: #FFF7ED; }
+
+    .stat-card-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .stat-card-badge.up {
+      color: #059669;
+      background: #ECFDF5;
+    }
+
+    .stat-card-badge.down {
+      color: #DC2626;
+      background: #FEF2F2;
+    }
+
+    .stat-card-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: 4px;
+    }
+
+    .stat-card-label {
+      font-size: 13px;
+      color: #64748B;
+      font-weight: 500;
+    }
+
+    /* ========== ALERT BANNER ========== */
+    .alert-banner {
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .alert-banner-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .alert-banner-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .alert-banner-text {
+      font-size: 14px;
+      color: #92400E;
+      font-weight: 500;
+    }
+
+    .alert-banner-btn {
+      background: #F59E0B;
+      color: #FFFFFF;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .alert-banner-btn:hover {
+      background: #D97706;
+    }
+
+    /* ========== CONTENT GRID ========== */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .content-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .content-card-header {
+      padding: 20px 20px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #F1F5F9;
+    }
+
+    .content-card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #0F172A;
+    }
+
+    .content-card-action {
+      font-size: 13px;
+      color: #6366F1;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .content-card-action:hover {
+      text-decoration: underline;
+    }
+
+    .content-card-body {
+      padding: 16px 20px 20px;
+    }
+
+    /* ========== APARTMENT CARDS ========== */
+    .apartment-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .apartment-card {
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+      cursor: pointer;
+    }
+
+    .apartment-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .apartment-card-img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .apartment-card-body {
+      padding: 10px 12px;
+    }
+
+    .apartment-card-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0F172A;
+      margin-bottom: 6px;
+    }
+
+    .apartment-card-status {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    .apartment-card-status.online {
+      background: #ECFDF5;
+      color: #059669;
+    }
+
+    .apartment-card-status.maintenance {
+      background: #FEF3C7;
+      color: #D97706;
+    }
+
+    .apartment-card-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 11px;
+      color: #64748B;
+    }
+
+    /* ========== ACCESS LOG TABLE ========== */
+    .access-log-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .access-log-table tr {
+      border-bottom: 1px solid #F1F5F9;
+    }
+
+    .access-log-table tr:last-child {
+      border-bottom: none;
+    }
+
+    .access-log-table td {
+      padding: 12px 0;
+      vertical-align: middle;
+      font-size: 13px;
+    }
+
+    .access-log-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .access-log-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #EEF2FF;
+      color: #6366F1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .access-log-name {
+      font-weight: 600;
+      color: #0F172A;
+    }
+
+    .access-log-apartment {
+      color: #64748B;
+      font-size: 12px;
+    }
+
+    .access-log-time {
+      color: #64748B;
+      font-size: 12px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .access-log-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .access-log-badge.entrata {
+      background: #ECFDF5;
+      color: #059669;
+    }
+
+    .access-log-badge.uscita {
+      background: #EEF2FF;
+      color: #6366F1;
+    }
+
+    .access-log-status-cell {
+      text-align: right;
+    }
+
+    /* ========== CLIENTI TABLE ========== */
+    .clienti-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .clienti-table tr {
+      border-bottom: 1px solid #F1F5F9;
+    }
+
+    .clienti-table tr:last-child {
+      border-bottom: none;
+    }
+
+    .clienti-table td {
+      padding: 12px 0;
+      vertical-align: middle;
+      font-size: 13px;
+    }
+
+    .clienti-name {
+      font-weight: 600;
+      color: #0F172A;
+    }
+
+    .clienti-count {
+      color: #64748B;
+      text-align: center;
+    }
+
+    .clienti-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+
+    .clienti-badge.attivo {
+      background: #ECFDF5;
+      color: #059669;
+    }
+
+    .clienti-badge.sospeso {
+      background: #FEF3C7;
+      color: #D97706;
+    }
+
+    .clienti-status-cell {
+      text-align: right;
+    }
+
+    /* ========== QUICK ACTIONS ========== */
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .quick-action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 24px 16px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+      text-decoration: none;
+    }
+
+    .quick-action-btn:hover {
+      background: #EEF2FF;
+      border-color: #C7D2FE;
+      transform: translateY(-2px);
+    }
+
+    .quick-action-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #EEF2FF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .quick-action-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0F172A;
+      text-align: center;
+    }
+
+    /* ========== BOTTOM SECTION ========== */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 1024px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .content-grid,
+      .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-hero {
+        padding: 24px;
+      }
+
+      .dashboard-hero h1 {
+        font-size: 22px;
+      }
+
+      .hero-stats {
+        flex-direction: column;
+      }
+
+      .hero-stat-card {
+        min-width: unset;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .stat-card-value {
+        font-size: 22px;
+      }
+
+      .apartment-list {
+        grid-template-columns: 1fr;
+      }
+
+      .alert-banner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .alert-banner-btn {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <a href="dashboard.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">eH</div>
+      <div class="sidebar-logo-text">ehy<span>Host</span></div>
+    </a>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Menu</div>
+      <a href="dashboard.html" class="sidebar-link active"><span class="icon">&#x1F4CA;</span> Dashboard</a>
+      <a href="appartamenti.html" class="sidebar-link"><span class="icon">&#x1F3E0;</span> Appartamenti</a>
+      <a href="utenti.html" class="sidebar-link"><span class="icon">&#x1F465;</span> Utenti</a>
+      <a href="clienti.html" class="sidebar-link"><span class="icon">&#x1F3E2;</span> Clienti</a>
+      <a href="soggiorni.html" class="sidebar-link"><span class="icon">&#x1F4C5;</span> Soggiorni</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Sistema</div>
+      <a href="#" class="sidebar-link"><span class="icon">&#x1F514;</span> Notifiche</a>
+      <a href="#" class="sidebar-link"><span class="icon">&#x2699;&#xFE0F;</span> Impostazioni</a>
+    </div>
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar">MZ</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Milo Zoppini</div>
+        <div class="sidebar-user-role">Tecnico</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Main wrapper -->
+  <div class="main-wrapper">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger-btn" onclick="toggleSidebar()">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="19" y2="6"/>
+            <line x1="3" y1="11" x2="19" y2="11"/>
+            <line x1="3" y1="16" x2="19" y2="16"/>
+          </svg>
+        </button>
+        <nav class="breadcrumb">
+          <span class="breadcrumb-current">Dashboard</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-search">
+          <svg class="topbar-search-icon" width="16" height="16" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="7.5" cy="7.5" r="5.5"/>
+            <line x1="12" y1="12" x2="15" y2="15"/>
+          </svg>
+          <input type="text" class="topbar-search-input" placeholder="Cerca...">
+        </div>
+        <button class="topbar-notification">
+          <svg width="20" height="20" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="topbar-notification-dot"></span>
+        </button>
+        <div class="topbar-avatar">MZ</div>
+      </div>
+    </header>
+
+    <!-- Page content -->
+    <main class="main-content">
+
+      <!-- Hero section -->
+      <section class="dashboard-hero">
+        <div class="dashboard-hero-content">
+          <h1>Buongiorno, Milo &#x1F44B;</h1>
+          <p>Ecco il riepilogo della tua piattaforma</p>
+          <div class="hero-stats">
+            <div class="hero-stat-card">
+              <div class="hero-stat-label">Dispositivi Online</div>
+              <div class="hero-stat-value">94%</div>
+            </div>
+            <div class="hero-stat-card">
+              <div class="hero-stat-label">Check-in Oggi</div>
+              <div class="hero-stat-value">12</div>
+            </div>
+            <div class="hero-stat-card">
+              <div class="hero-stat-label">Alert Attivi</div>
+              <div class="hero-stat-value">3</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats grid -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-icon blue">&#x1F3E0;</div>
+            <span class="stat-card-badge up">+8.2% &#x2191;</span>
+          </div>
+          <div class="stat-card-value">147</div>
+          <div class="stat-card-label">Appartamenti</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-icon green">&#x1F465;</div>
+            <span class="stat-card-badge up">+12.5% &#x2191;</span>
+          </div>
+          <div class="stat-card-value">1,284</div>
+          <div class="stat-card-label">Utenti Attivi</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-icon purple">&#x1F4C5;</div>
+            <span class="stat-card-badge down">-2.1% &#x2193;</span>
+          </div>
+          <div class="stat-card-value">89</div>
+          <div class="stat-card-label">Soggiorni Attivi</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-icon orange">&#x1F527;</div>
+            <span class="stat-card-badge up">+5.7% &#x2191;</span>
+          </div>
+          <div class="stat-card-value">23</div>
+          <div class="stat-card-label">Manutenzioni</div>
+        </div>
+      </section>
+
+      <!-- Alert banner -->
+      <section class="alert-banner">
+        <div class="alert-banner-content">
+          <div class="alert-banner-icon">&#x26A0;&#xFE0F;</div>
+          <div class="alert-banner-text">3 sensori necessitano calibrazione - Appartamento Brera Design Apt</div>
+        </div>
+        <button class="alert-banner-btn">Verifica</button>
+      </section>
+
+      <!-- Content grid: Apartments + Access log -->
+      <section class="content-grid">
+
+        <!-- Recent apartments -->
+        <div class="content-card">
+          <div class="content-card-header">
+            <div class="content-card-title">Appartamenti Recenti</div>
+            <a href="appartamenti.html" class="content-card-action">Vedi tutti</a>
+          </div>
+          <div class="content-card-body">
+            <div class="apartment-list">
+              <div class="apartment-card">
+                <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop" alt="Loft Isola" class="apartment-card-img" loading="lazy">
+                <div class="apartment-card-body">
+                  <div class="apartment-card-name">Loft Isola</div>
+                  <span class="apartment-card-status online">Online</span>
+                  <div class="apartment-card-meta">
+                    <span>4 dispositivi</span>
+                    <span>2 ospiti</span>
+                  </div>
+                </div>
+              </div>
+              <div class="apartment-card">
+                <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop" alt="Navigli Minimal" class="apartment-card-img" loading="lazy">
+                <div class="apartment-card-body">
+                  <div class="apartment-card-name">Navigli Minimal</div>
+                  <span class="apartment-card-status online">Online</span>
+                  <div class="apartment-card-meta">
+                    <span>6 dispositivi</span>
+                    <span>3 ospiti</span>
+                  </div>
+                </div>
+              </div>
+              <div class="apartment-card">
+                <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=300&fit=crop" alt="Brera Design" class="apartment-card-img" loading="lazy">
+                <div class="apartment-card-body">
+                  <div class="apartment-card-name">Brera Design</div>
+                  <span class="apartment-card-status maintenance">Manutenzione</span>
+                  <div class="apartment-card-meta">
+                    <span>5 dispositivi</span>
+                    <span>0 ospiti</span>
+                  </div>
+                </div>
+              </div>
+              <div class="apartment-card">
+                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop" alt="Skyline Suite" class="apartment-card-img" loading="lazy">
+                <div class="apartment-card-body">
+                  <div class="apartment-card-name">Skyline Suite</div>
+                  <span class="apartment-card-status online">Online</span>
+                  <div class="apartment-card-meta">
+                    <span>8 dispositivi</span>
+                    <span>4 ospiti</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Access log -->
+        <div class="content-card">
+          <div class="content-card-header">
+            <div class="content-card-title">Ultimi Accessi</div>
+            <a href="#" class="content-card-action">Vedi tutti</a>
+          </div>
+          <div class="content-card-body">
+            <table class="access-log-table">
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="access-log-user">
+                      <div class="access-log-avatar">LR</div>
+                      <div>
+                        <div class="access-log-name">Luca Rossi</div>
+                        <div class="access-log-apartment">Loft Isola</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="access-log-time">10:32</td>
+                  <td class="access-log-status-cell"><span class="access-log-badge entrata">Entrata</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="access-log-user">
+                      <div class="access-log-avatar">MB</div>
+                      <div>
+                        <div class="access-log-name">Maria Bianchi</div>
+                        <div class="access-log-apartment">Navigli Minimal</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="access-log-time">09:45</td>
+                  <td class="access-log-status-cell"><span class="access-log-badge uscita">Uscita</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="access-log-user">
+                      <div class="access-log-avatar">GV</div>
+                      <div>
+                        <div class="access-log-name">Giovanni Verdi</div>
+                        <div class="access-log-apartment">Skyline Suite</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="access-log-time">09:12</td>
+                  <td class="access-log-status-cell"><span class="access-log-badge entrata">Entrata</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="access-log-user">
+                      <div class="access-log-avatar">AF</div>
+                      <div>
+                        <div class="access-log-name">Anna Ferrari</div>
+                        <div class="access-log-apartment">Loft Isola</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="access-log-time">08:58</td>
+                  <td class="access-log-status-cell"><span class="access-log-badge uscita">Uscita</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="access-log-user">
+                      <div class="access-log-avatar">PE</div>
+                      <div>
+                        <div class="access-log-name">Paolo Esposito</div>
+                        <div class="access-log-apartment">Skyline Suite</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="access-log-time">08:30</td>
+                  <td class="access-log-status-cell"><span class="access-log-badge entrata">Entrata</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Bottom section: Clienti + Quick actions -->
+      <section class="bottom-grid">
+
+        <!-- Clienti table -->
+        <div class="content-card">
+          <div class="content-card-header">
+            <div class="content-card-title">Top Clienti</div>
+            <a href="clienti.html" class="content-card-action">Vedi tutti</a>
+          </div>
+          <div class="content-card-body">
+            <table class="clienti-table">
+              <tbody>
+                <tr>
+                  <td class="clienti-name">Milano Luxury Stays</td>
+                  <td class="clienti-count">24 app.</td>
+                  <td class="clienti-status-cell"><span class="clienti-badge attivo">Attivo</span></td>
+                </tr>
+                <tr>
+                  <td class="clienti-name">Urban Living SRL</td>
+                  <td class="clienti-count">18 app.</td>
+                  <td class="clienti-status-cell"><span class="clienti-badge attivo">Attivo</span></td>
+                </tr>
+                <tr>
+                  <td class="clienti-name">Casa Dolce Casa</td>
+                  <td class="clienti-count">15 app.</td>
+                  <td class="clienti-status-cell"><span class="clienti-badge attivo">Attivo</span></td>
+                </tr>
+                <tr>
+                  <td class="clienti-name">Residenza Italiana</td>
+                  <td class="clienti-count">12 app.</td>
+                  <td class="clienti-status-cell"><span class="clienti-badge sospeso">Sospeso</span></td>
+                </tr>
+                <tr>
+                  <td class="clienti-name">HomeConnect Pro</td>
+                  <td class="clienti-count">9 app.</td>
+                  <td class="clienti-status-cell"><span class="clienti-badge attivo">Attivo</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="content-card">
+          <div class="content-card-header">
+            <div class="content-card-title">Azioni Rapide</div>
+          </div>
+          <div class="content-card-body">
+            <div class="quick-actions-grid">
+              <a href="appartamenti.html" class="quick-action-btn">
+                <div class="quick-action-icon">&#x1F3E0;</div>
+                <div class="quick-action-label">Nuovo Appartamento</div>
+              </a>
+              <a href="utenti.html" class="quick-action-btn">
+                <div class="quick-action-icon">&#x1F464;</div>
+                <div class="quick-action-label">Aggiungi Utente</div>
+              </a>
+              <a href="#" class="quick-action-btn">
+                <div class="quick-action-icon">&#x1F4C4;</div>
+                <div class="quick-action-label">Report Mensile</div>
+              </a>
+              <a href="#" class="quick-action-btn">
+                <div class="quick-action-icon">&#x1F4E1;</div>
+                <div class="quick-action-label">Configura Sensori</div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('show');
+    }
+  </script>
+
+</body>
+</html>
